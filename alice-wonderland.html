@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>✦ Bunny Service · Alice in Wonderland ✦</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Mali:wght@500;600;700&family=Playfair+Display:wght@600;700;800&display=swap');
+
+    :root {
+      --sky: #b9e8f7;
+      --sky-deep: #75cde7;
+      --rose: #f39ab8;
+      --rose-deep: #d9618b;
+      --lavender: #cdb8ec;
+      --cream: #fff9ed;
+      --ink: #49364f;
+      --muted: #76637b;
+      --gold: #e6ae4e;
+      --gold-soft: #ffe5a8;
+      --paper: rgba(255, 255, 255, .80);
+      --line: rgba(119, 79, 115, .18);
+      --shadow: 0 18px 50px rgba(99, 60, 99, .18);
+      --shadow-soft: 0 8px 22px rgba(99, 60, 99, .13);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 28px 15px 70px;
+      color: var(--ink);
+      font-family: 'IBM Plex Sans Thai', sans-serif;
+      background:
+        radial-gradient(circle at 8% 10%, rgba(255,255,255,.92) 0 5%, transparent 28%),
+        radial-gradient(circle at 90% 24%, rgba(255,236,190,.8) 0 4%, transparent 25%),
+        linear-gradient(135deg, #dff6fb 0%, #fff5f5 48%, #f8eafa 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    body::before, body::after {
+      content: ''; position: fixed; pointer-events: none; z-index: -1;
+      width: 280px; height: 280px; border-radius: 50%; filter: blur(5px); opacity: .45;
+    }
+    body::before { left: -110px; bottom: 7%; background: #f9bfd1; }
+    body::after { right: -120px; top: 45%; background: #a8dff0; }
+
+    #particles { position: fixed; inset: 0; pointer-events: none; z-index: 5; overflow: hidden; }
+    .particle { position: absolute; bottom: -30px; opacity: .72; color: var(--rose-deep); text-shadow: 0 0 12px rgba(255,255,255,.9); animation: floatUp linear forwards; }
+    @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 18% { opacity: .8; } 80% { opacity: .6; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+
+    .container { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+    .page-view { display: none; animation: pageIn .45s cubic-bezier(.2,.8,.2,1) both; }
+    .page-view.active { display: block; }
+    @keyframes pageIn { from { opacity: 0; transform: translateY(18px) scale(.985); } to { opacity: 1; transform: none; } }
+
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+    .btn-back, .tab-btn { font: inherit; color: var(--rose-deep); background: rgba(255,255,255,.7); border: 1px solid rgba(217,97,139,.35); cursor: pointer; transition: .25s ease; }
+    .btn-back { display: inline-flex; align-items: center; gap: 7px; padding: 9px 19px; border-radius: 999px; font-size: 14px; font-weight: 700; box-shadow: var(--shadow-soft); }
+    .btn-back:hover { transform: translateX(-4px); background: var(--rose-deep); color: white; }
+
+    .hero, .page-header, .announcement-box, .menu-card, .rules-box, .modal-card {
+      background: var(--paper); border: 1px solid rgba(255,255,255,.9); box-shadow: var(--shadow); backdrop-filter: blur(16px);
+    }
+    .hero { position: relative; overflow: hidden; text-align: center; padding: 42px 26px 32px; border-radius: 34px; margin-bottom: 20px; }
+    .hero::before { content: '♠  ♥  ♦  ♣'; position: absolute; top: 12px; left: 0; right: 0; color: var(--rose-deep); letter-spacing: 26px; font-family: 'Playfair Display', serif; opacity: .55; }
+    .hero::after { content: '✦'; position: absolute; top: 11px; right: 21px; font-size: 25px; color: var(--gold); animation: twinkle 1.8s infinite alternate; }
+    @keyframes twinkle { to { transform: scale(1.22) rotate(12deg); opacity: .45; } }
+    .hero-watch-frame { width: 114px; height: 114px; margin: 0 auto 16px; padding: 5px; border-radius: 50%; background: linear-gradient(135deg, var(--gold), #fff1bb, var(--rose)); box-shadow: 0 8px 24px rgba(230,174,78,.35); animation: swing 4s ease-in-out infinite alternate; }
+    .hero-icon { width: 100%; height: 100%; overflow: hidden; border: 4px solid white; border-radius: 50%; background: #fff; }
+    .hero-oc-img { width: 100%; height: 100%; object-fit: cover; }
+    @keyframes swing { from { transform: rotate(-4deg); } to { transform: rotate(4deg); } }
+    .hero h1 { margin: 0 0 7px; font: 800 38px 'Playfair Display', serif; color: var(--rose-deep); letter-spacing: .3px; }
+    .hero .subtitle { margin-bottom: 12px; color: var(--gold); font: 700 13px 'Playfair Display', serif; letter-spacing: 2px; text-transform: uppercase; }
+    .hero p, .page-header p { margin: 0; color: var(--muted); line-height: 1.8; }
+    .announcement-box { padding: 17px 21px; margin-bottom: 28px; border-radius: 19px; border-left: 5px solid var(--gold); line-height: 1.75; }
+    .section-title, .page-header h2, .modal-card h3 { font-family: 'Mali', cursive; }
+    .section-title { margin: 0 0 16px; color: var(--rose-deep); font-size: 25px; }
+    .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 18px; margin-bottom: 28px; }
+    .menu-card { position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 235px; padding: 27px 20px 20px; text-align: center; border-radius: 24px; cursor: pointer; transition: .35s cubic-bezier(.2,.8,.2,1); }
+    .menu-card::before, .menu-card::after { position: absolute; color: var(--rose-deep); font-family: 'Playfair Display', serif; font-weight: 700; }
+    .menu-card::before { content: attr(data-suit-top); top: 10px; left: 14px; }
+    .menu-card::after { content: attr(data-suit-bottom); bottom: 10px; right: 14px; }
+    .menu-card:hover { transform: translateY(-8px) rotate(1.2deg); border-color: var(--gold-soft); box-shadow: 0 22px 42px rgba(217,97,139,.2); }
+    .menu-card .icon { font-size: 42px; margin-bottom: 9px; filter: drop-shadow(0 5px 5px rgba(99,60,99,.12)); }
+    .menu-card h3 { margin: 0 0 7px; color: var(--ink); font: 700 20px 'Mali', cursive; }
+    .menu-card p { margin: 0 0 17px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+    .btn-card { width: 100%; padding: 10px 16px; color: white; background: linear-gradient(135deg, var(--rose), var(--rose-deep)); border: 0; border-radius: 999px; font-weight: 700; cursor: pointer; transition: .25s; box-shadow: 0 6px 13px rgba(217,97,139,.23); }
+    .menu-card:hover .btn-card { background: linear-gradient(135deg, var(--gold), #d58b32); }
+
+    .page-header { padding: 24px; margin-bottom: 18px; border-radius: 26px; border-top: 5px solid var(--sky-deep); }
+    .page-header h2 { margin: 0 0 8px; color: var(--rose-deep); font-size: 26px; }
+    .rate-box { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 17px 21px; margin-bottom: 20px; color: #92631d; background: #fff4cf; border: 1px solid #f1cc79; border-radius: 18px; font-weight: 700; box-shadow: var(--shadow-soft); }
+    .rules-box { padding: 21px; margin-bottom: 23px; border-radius: 22px; border-left: 5px solid var(--rose); }
+    .rules-box h4 { margin: 0 0 10px; color: var(--rose-deep); font-size: 16px; }
+    .rules-box ul { margin: 0; padding-left: 20px; color: var(--muted); font-size: 14.5px; line-height: 1.85; }
+    .btn-pretty { display: inline-flex; align-items: center; justify-content: center; width: 100%; padding: 14px 25px; border: 0; border-radius: 999px; color: white; font: 700 15.5px 'IBM Plex Sans Thai', sans-serif; cursor: pointer; text-decoration: none; transition: .25s; }
+    .btn-pretty:hover { transform: translateY(-3px); filter: saturate(1.12) brightness(1.05); box-shadow: 0 10px 22px rgba(99,60,99,.2); }
+    .btn-alice { background: linear-gradient(135deg, #5bb9d7, #338dbb); }
+    .btn-cheshire { background: linear-gradient(135deg, #b58cdb, #8f5db9); }
+    .btn-queen { background: linear-gradient(135deg, #e78aa6, #c9557d); }
+
+    .filter-tabs { display: flex; gap: 9px; overflow-x: auto; padding: 2px 2px 8px; margin-bottom: 17px; }
+    .tab-btn { white-space: nowrap; padding: 8px 17px; border-radius: 999px; font-size: 14px; font-weight: 600; }
+    .tab-btn.active, .tab-btn:hover { color: white; background: var(--rose-deep); border-color: var(--rose-deep); box-shadow: 0 5px 13px rgba(217,97,139,.22); }
+    .rich-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-bottom: 28px; }
+    .gallery-item { position: relative; aspect-ratio: 1; overflow: hidden; border: 1px solid rgba(255,255,255,.9); border-radius: 19px; background: white; box-shadow: var(--shadow-soft); cursor: pointer; transition: .3s; }
+    .gallery-item:hover { transform: translateY(-5px) rotate(-1deg); box-shadow: 0 16px 28px rgba(99,60,99,.2); }
+    .gallery-item img { display: block; width: 100%; height: 100%; object-fit: cover; transition: .45s; }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; color: white; background: linear-gradient(to top, rgba(73,54,79,.86), transparent 68%); opacity: 0; transition: .3s; }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-tag { align-self: flex-start; padding: 2px 8px; margin-bottom: 4px; color: var(--ink); background: var(--gold-soft); border-radius: 99px; font-size: 10.5px; font-weight: 700; }
+    .gallery-caption { font-size: 13px; font-weight: 600; line-height: 1.3; }
+
+    .lightbox, .modal { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; padding: 18px; background: rgba(73,54,79,.55); backdrop-filter: blur(12px); opacity: 0; visibility: hidden; transition: .3s; }
+    .lightbox { z-index: 999; flex-direction: column; }
+    .lightbox.active, .modal.active { opacity: 1; visibility: visible; }
+    .lightbox-img { max-width: 90vw; max-height: 75vh; border: 5px solid white; border-radius: 17px; box-shadow: 0 18px 55px rgba(73,54,79,.35); }
+    .lightbox-text { margin-top: 14px; color: white; font: 600 16px 'Mali', cursive; text-align: center; }
+    .lightbox-close, .modal-close { position: absolute; border: 0; border-radius: 50%; cursor: pointer; font-weight: 700; }
+    .lightbox-close { top: 20px; right: 20px; width: 40px; height: 40px; color: white; background: var(--rose-deep); font-size: 22px; }
+    .modal { z-index: 100; }
+    .modal-card { position: relative; width: 100%; max-width: 430px; padding: 28px; border-radius: 28px; }
+    .modal-card h3 { margin-top: 0 !important; color: var(--rose-deep) !important; font-size: 23px; }
+    .modal-card p { color: var(--muted) !important; }
+    .modal-close { top: 17px; right: 17px; width: 32px; height: 32px; color: var(--muted); background: #f8edf4; font-size: 18px; }
+    .footer { margin-top: 38px; color: var(--muted); font: 600 13.5px 'Playfair Display', serif; text-align: center; letter-spacing: .6px; }
+    @media (max-width: 600px) { body { padding-top: 16px; } .hero h1 { font-size: 31px; } .hero p br { display: none; } .page-header h2 { font-size: 22px; } .rate-box { align-items: flex-start; flex-direction: column; } }
+
+  </style>
+</head>
+<body>
+
+  <!-- Floating Particles Background -->
+  <div id="particles"></div>
+
+  <div class="container">
+
+    <!-- HOME PAGE -->
+    <div class="page-view active" id="page-home">
+      
+      <div class="hero">
+        <div class="hero-watch-frame">
+          <div class="hero-icon">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" alt="OC Avatar" class="hero-oc-img">
+          </div>
+        </div>
+        
+        <div class="subtitle">♠ Welcome to Dark Wonderland ♠</div>
+        <h1>♡ Bunny Service ♡</h1>
+        <p>
+          ยินดีต้อนรับสู่แดนมหัศจรรย์ยามรัตติกาล! บริการช่วยเหลือสั่งซื้อสินค้า วิ่งกดงานอดอป <br>
+          แลกเปลี่ยนเงินต่างประเทศ และกดสั่งงานผ่าน VGen ✨
+        </p>
+      </div>
+
+      <div class="announcement-box">
+        <strong style="color: var(--gold-accent);">📢 ประกาศจากกระต่ายขาว:</strong> ร้านเปิดทำการปกติครับ สามารถเลือกบริการ หรือจิ้มเข้าชมคลังภาพผลงานแบบขยายใหญ่ในแกลเลอรีได้เลยครับ!
+      </div>
+
+      <h2 class="section-title">🎩 บริการในแดนมหัศจรรย์</h2>
+      <div class="service-grid">
+        
+        <div class="menu-card" data-suit-top="♠ A" data-suit-bottom="A ♠" onclick="goToPage('page-adopt')">
+          <div>
+            <div class="icon">🐇</div>
+            <h3>รับวิ่งอดอป</h3>
+            <p>เฝ้าหน้าจอ วิ่งกดงานอดอปแข่งกับเวลาตามเวลาเปิดขายของนักวาด</p>
+          </div>
+          <button class="btn-card">ดูรายละเอียด ➔</button>
+        </div>
+
+        <div class="menu-card" data-suit-top="♥️ K" data-suit-bottom="K ♥️" onclick="goToPage('page-paypal')">
+          <div>
+            <div class="icon">💸</div>
+            <h3>รับแลกเงิน PayPal</h3>
+            <p>บริการรับแลกเปลี่ยนเงินระหว่าง PayPal และ THB สำหรับสั่งงานต่างประเทศ</p>
+          </div>
+          <button class="btn-card">ดูรายละเอียด ➔</button>
+        </div>
+
+        <div class="menu-card" data-suit-top="♦️ Q" data-suit-bottom="Q ♦️" onclick="goToPage('page-vgen')">
+          <div>
+            <div class="icon">🛒</div>
+            <h3>รับกดซื้อใน VGen</h3>
+            <p>รับกดสั่งซื้อ Commission, YCH หรือสินค้าจากศิลปินบน VGen</p>
+          </div>
+          <button class="btn-card">ดูรายละเอียด ➔</button>
+        </div>
+
+        <div class="menu-card" data-suit-top="♣️ J" data-suit-bottom="J ♣️" onclick="goToPage('page-gallery')">
+          <div>
+            <div class="icon">🖼️</div>
+            <h3>คลังผลงาน & รีวิว</h3>
+            <p>รวมภาพตัวอย่างผลงานแน่นๆ กดจิ้มภาพขยายใหญ่ดูรายละเอียดได้</p>
+          </div>
+          <button class="btn-card">เข้าชมแกลเลอรี ➔</button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- SERVICE 01 - ADOPT -->
+    <div class="page-view" id="page-adopt">
+      <div class="top-bar">
+        <button class="btn-back" onclick="goToPage('page-home')">← กลับหน้าหลัก</button>
+        <span style="font-size: 13px; color: var(--alice-cyan); font-weight: 700;">SERVICE 01</span>
+      </div>
+
+      <div class="page-header">
+        <h2>🐇 บริการรับวิ่งอดอป (White Rabbit Adopt Run)</h2>
+        <p>เฝ้าหน้าจอเตรียมสปีดกดสั่งซื้อตัวละครตามเวลาเปิดขายอย่างแม่นยำ</p>
+      </div>
+
+      <div class="rate-box">
+        <span>⏱️ ค่าบริการวิ่งอดอป</span>
+        <span>เริ่มต้น ___ บาท / งาน (ไม่รวมค่าตัวอดอป)</span>
+      </div>
+
+      <div class="rules-box">
+        <h4>⚠️ กฎและเงื่อนไขเฉพาะการวิ่งอดอป</h4>
+        <ul>
+          <li><strong>การมัดจำ:</strong> ต้องชำระค่าวิ่ง + ค่าตัวอดอปเต็มจำนวนก่อนเวลาเปิดขายอย่างน้อย 30 นาที</li>
+          <li><strong>กรณีหลุด/กดไม่ทัน:</strong> คืนเงินค่าอดอปเต็มจำนวน (หักค่าวิ่ง ___ บาท เป็นค่าสแตนด์บาย)</li>
+          <li><strong>ข้อมูลที่ต้องเตรียม:</strong> ลิงก์โพสต์ขาย, หมายเลขตัวละครที่ต้องการ, และงบสู้สูงสุด</li>
+        </ul>
+      </div>
+
+      <button class="btn-pretty btn-alice" onclick="openModal('วิ่งอดอป')">💬 สั่งงานวิ่งอดอป (Discord)</button>
+    </div>
+
+    <!-- SERVICE 02 - PAYPAL -->
+    <div class="page-view" id="page-paypal">
+      <div class="top-bar">
+        <button class="btn-back" onclick="goToPage('page-home')">← กลับหน้าหลัก</button>
+        <span style="font-size: 13px; color: var(--cheshire-neon); font-weight: 700;">SERVICE 02</span>
+      </div>
+
+      <div class="page-header">
+        <h2>💸 บริการรับแลกเงิน PayPal (Mad Hatter's Exchange)</h2>
+        <p>บริการโอน-แลกเปลี่ยนเงิน PayPal และ THB สะดวก รวดเร็ว และปลอดภัย</p>
+      </div>
+
+      <div class="rate-box">
+        <span>📊 เรทแลกเปลี่ยนวันนี้</span>
+        <span>PayPal ➔ THB (เรท ___ ) | THB ➔ PayPal (เรท ___ )</span>
+      </div>
+
+      <div class="rules-box">
+        <h4>⚠️ กฎและเงื่อนไขเฉพาะการแลกเงิน PayPal</h4>
+        <ul>
+          <li><strong>ที่มาของเงิน:</strong> รับเฉพาะเงินสุจริต ไม่รับโอนเงินจากบัญชีที่สุ่มเสี่ยงทุกกรณี</li>
+          <li><strong>การยืนยันตัวตน:</strong> ชื่อบัญชีที่โอนเข้ามา ต้องตรงกับชื่อผู้สั่งงานเท่านั้น</li>
+          <li><strong>ค่าธรรมเนียม:</strong> ผู้สั่งซื้อเป็นผู้รับผิดชอบค่าธรรมเนียมฝั่ง PayPal (Fee) ทั้งหมด</li>
+        </ul>
+      </div>
+
+      <button class="btn-pretty btn-cheshire" onclick="openModal('แลกเงิน PayPal')">💬 แจ้งแลกเงิน PayPal (Discord)</button>
+    </div>
+
+    <!-- SERVICE 03 - VGEN -->
+    <div class="page-view" id="page-vgen">
+      <div class="top-bar">
+        <button class="btn-back" onclick="goToPage('page-home')">← กลับหน้าหลัก</button>
+        <span style="font-size: 13px; color: var(--queen-red); font-weight: 700;">SERVICE 03</span>
+      </div>
+
+      <div class="page-header">
+        <h2>🛒 บริการรับกดซื้อของใน VGen (Wonderland Shop)</h2>
+        <p>บริการรับกดสั่งซื้อ Commission, YCH หรือสินค้าจากศิลปินบน VGen</p>
+      </div>
+
+      <div class="rate-box">
+        <span>💰 ค่าบริการกด VGen</span>
+        <span>เริ่มต้น ___ บาท / 1 ออเดอร์</span>
+      </div>
+
+      <div class="rules-box">
+        <h4>⚠️ กฎและเงื่อนไขเฉพาะการสั่งกด VGen</h4>
+        <ul>
+          <li><strong>การบรีฟงาน:</strong> ลูกค้าต้องเตรียมรายละเอียดและบรีฟงานเป็นภาษาอังกฤษให้พร้อม</li>
+          <li><strong>การติดตามงาน:</strong> ร้านจะอัปเดตสถานะงานจาก VGen ให้ทราบจนเสร็จสิ้น</li>
+          <li><strong>กรณีปฏิเสธ:</strong> หากศิลปินปฏิเสธ (Decline) ออเดอร์ ร้านคืนเงินเต็มจำนวน</li>
+        </ul>
+      </div>
+
+      <button class="btn-pretty btn-queen" onclick="openModal('กดซื้อ VGen')">💬 สั่งกด VGen (Discord)</button>
+    </div>
+
+    <!-- PORTFOLIO PAGE -->
+    <div class="page-view" id="page-gallery">
+      <div class="top-bar">
+        <button class="btn-back" onclick="goToPage('page-home')">← กลับหน้าหลัก</button>
+        <span style="font-size: 13px; color: var(--gold-accent); font-weight: 700;">PORTFOLIO</span>
+      </div>
+
+      <div class="page-header">
+        <h2>🖼️ คลังผลงาน (Through the Looking Glass)</h2>
+        <p>รวบรวมประวัติการกดงานแบบแน่นๆ 🔍 <em>จิ้มที่รูปเพื่อดูภาพใหญ่ขยายเต็มตาได้เลยครับ</em></p>
+      </div>
+
+      <div class="filter-tabs">
+        <button class="tab-btn active" onclick="filterGallery('all', this)">✨ ทั้งหมด</button>
+        <button class="tab-btn" onclick="filterGallery('adopt', this)">🐇 วิ่งอดอป</button>
+        <button class="tab-btn" onclick="filterGallery('vgen', this)">🛒 งาน VGen</button>
+        <button class="tab-btn" onclick="filterGallery('review', this)">💬 รีวิวลูกค้า</button>
+      </div>
+
+      <div class="rich-gallery-grid">
+        <div class="gallery-item" data-category="adopt" onclick="openLightbox('https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=1000&q=80', 'กดสู้ราคาสำเร็จ AB #01 🐇')">
+          <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=400&q=80" alt="Work 1">
+          <div class="gallery-overlay">
+            <span class="gallery-tag">วิ่งอดอป</span>
+            <div class="gallery-caption">กดสู้ราคาสำเร็จ AB #01</div>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="vgen" onclick="openLightbox('https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=1000&q=80', 'กด Commission Slot ใน VGen 🛒')">
+          <img src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?auto=format&fit=crop&w=400&q=80" alt="Work 2">
+          <div class="gallery-overlay">
+            <span class="gallery-tag">VGen</span>
+            <div class="gallery-caption">กด Commission Slot</div>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="review" onclick="openLightbox('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1000&q=80', 'รีวิวโอนเงิน PayPal รวดเร็ว 💬')">
+          <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=400&q=80" alt="Work 3">
+          <div class="gallery-overlay">
+            <span class="gallery-tag">รีวิว</span>
+            <div class="gallery-caption">โอนเงิน PayPal รวดเร็ว</div>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="adopt" onclick="openLightbox('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80', 'วิ่งกดทันคิวแรก #01 🐇')">
+          <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=400&q=80" alt="Work 4">
+          <div class="gallery-overlay">
+            <span class="gallery-tag">วิ่งอดอป</span>
+            <div class="gallery-caption">วิ่งกดทันคิวแรก #01</div>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="vgen" onclick="openLightbox('https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1000&q=80', 'สั่งกดสินค้า VGen สำเร็จ 🛒')">
+          <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=400&q=80" alt="Work 5">
+          <div class="gallery-overlay">
+            <span class="gallery-tag">VGen</span>
+            <div class="gallery-caption">สั่งกด YCH VGen สำเร็จ</div>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="review" onclick="openLightbox('https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1000&q=80', 'รีวิวบริการกดอดอปจากลูกค้า 💬')">
+          <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=400&q=80" alt="Work 6">
+          <div class="gallery-overlay">
+            <span class="gallery-tag">รีวิว</span>
+            <div class="gallery-caption">รีวิวสปีดเร็วทันใจ</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      ✦ Bunny Service · Alice in Wonderland ✦
+    </div>
+
+  </div>
+
+  <!-- LIGHTBOX MODAL -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button class="lightbox-close" onclick="closeLightbox()">×</button>
+    <img src="" id="lightboxImg" class="lightbox-img" alt="Enlarged View">
+    <div id="lightboxText" class="lightbox-text"></div>
+  </div>
+
+  <!-- ORDER MODAL -->
+  <div class="modal" id="orderModal">
+    <div class="modal-card">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h3 style="margin-top:0; color: #ffffff; font-family: 'Mali', cursive;" id="modalTitle">📩 สั่งซื้อบริการ</h3>
+      <p style="font-size:14px; color: var(--text-sub); margin-bottom: 20px;">เลือกช่องทางที่สะดวกในการติดต่อสั่งงานได้เลยครับ</p>
+      
+      <a href="YOUR-DISCORD-LINK" target="_blank" class="btn-pretty btn-cheshire" style="margin-bottom:12px; font-size:14px; padding:12px 20px;">
+        💬 ติดต่อผ่าน Discord (หลัก)
+      </a>
+      
+      <a href="YOUR-FORM-LINK" target="_blank" class="btn-pretty btn-alice" style="font-size:14px; padding:12px 20px;">
+        📝 กรอกแบบฟอร์มสั่งงาน
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function goToPage(pageId) {
+      document.querySelectorAll('.page-view').forEach(page => page.classList.remove('active'));
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) {
+        targetPage.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function filterGallery(category, btnElement) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        if (category === 'all' || item.getAttribute('data-category') === category) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    function openLightbox(imageSrc, captionText) {
+      document.getElementById('lightboxImg').src = imageSrc;
+      document.getElementById('lightboxText').innerText = captionText;
+      document.getElementById('lightbox').classList.add('active');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('active');
+    }
+
+    const particleContainer = document.getElementById("particles");
+    const aliceIcons = ["♠️", "♥️", "♦️", "♣️", "🐇", "⏱️", "☕", "🗝️", "🎩", "✨", "🌙"];
+
+    function createParticle() {
+      const p = document.createElement("div");
+      p.className = "particle";
+      p.textContent = aliceIcons[Math.floor(Math.random() * aliceIcons.length)];
+      p.style.left = Math.random() * 100 + "%";
+      p.style.fontSize = (12 + Math.random() * 14) + "px";
+      p.style.animationDuration = (7 + Math.random() * 7) + "s";
+      particleContainer.appendChild(p);
+
+      setTimeout(() => { p.remove(); }, 14000);
+    }
+    setInterval(createParticle, 700);
+
+    const modal = document.getElementById('orderModal');
+    function openModal(serviceName) {
+      if (serviceName) document.getElementById('modalTitle').innerText = `📩 สั่งงาน: ${serviceName}`;
+      modal.classList.add('active');
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    // Wonderland keyboard controls and gentle card tilt effect
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') { closeLightbox(); closeModal(); }
+    });
+    document.querySelectorAll('.menu-card').forEach((card) => {
+      card.addEventListener('mousemove', (event) => {
+        const box = card.getBoundingClientRect();
+        const rotateX = ((event.clientY - box.top) / box.height - .5) * -3;
+        const rotateY = ((event.clientX - box.left) / box.width - .5) * 3;
+        card.style.transform = `translateY(-8px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+    });
+
+  </script>
+</body>
+</html>
